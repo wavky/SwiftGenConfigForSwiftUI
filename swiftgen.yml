@@ -1,0 +1,15 @@
+input_dir: ${TARGET_NAME}/Resources/
+output_dir: ${TARGET_NAME}/Generated/
+strings:
+  inputs: en.lproj/
+  filter: ^((?!InfoPlist).)+\.strings$
+  outputs:
+    - templatePath: swiftui-strings-template.stencil
+      output: strings.swift
+xcassets:
+  inputs:
+    - Image.xcassets
+    - Color.xcassets
+  outputs:
+    - templatePath: swiftui-assets-template.stencil
+      output: assets.swift
