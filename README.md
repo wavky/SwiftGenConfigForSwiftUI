@@ -65,12 +65,12 @@ swiftgen
 ## 在 SwiftUI 中使用
 ```swift
 Image(Asset.Image.image_name.name) // 图片类资源
-Text(L10n.Category.text_name.key) // 文本类资源
+Text(L10n.text_name.key) // 文本类资源
     .foregroundColor(
         Asset.Color.color_name.color // 颜色资源
     )
 
-L10n.Category.text_name.text // 返回 String 类型
+L10n.text_name.text // 返回 String 类型
 Asset.Color.color_name.nsColor // 返回 NSColor 类型
 Asset.Color.color_name.uiColor // 返回 UIColor 类型
 ```
