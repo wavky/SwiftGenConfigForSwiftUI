@@ -6,6 +6,13 @@
 * 不勾选 Use Base Internationalization
 * 本地化（默认英语）
 
+
+## 已验证适配部分
+- [x] String 资源
+- [x] xcassets 图片资源
+- [x] xcassets 颜色资源
+
+
 ## 安装
 ```
 brew install swiftgen
@@ -25,17 +32,17 @@ ${PROJECT}
 ├── swiftgen.yml
 ├── swiftui-assets-template.stencil
 ├── swiftui-strings-template.stencil
-├── ${PROJECT}.xcodeproj
 └── ${PROJECT}
     ├── Generated
     ├── Resources
     │   ├── Color.xcassets
     │   ├── Image.xcassets
     │   └── Localizable.strings
-    ├── ContentView.swift
     ├── App.swift
+    ├── ContentView.swift
     ├── Info.plist
     ├── InfoPlist.strings
+    ├── ${PROJECT}.entitlements
     └── Preview Content
 ```
 
@@ -47,6 +54,7 @@ ${PROJECT}
 ```
 swiftgen
 ```
+![](./readme/config.png)
 
 ### 生成索引辅助类
 1. ⌘B 执行项目编译
