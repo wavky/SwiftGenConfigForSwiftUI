@@ -1,10 +1,11 @@
 # SwiftGen 在 Swift5 + SwiftUI 下的配置方案
-## 使用环境
+## 使用环境（条件）
 * Swift 5
 * SwiftUI
 * 不使用 storyboard 和 xib
 * 不勾选 Use Base Internationalization
 * 本地化（默认英语）
+  * 所有 .strings 文件需要在 file inspector 中点击 Localize 启用 Localization
 
 
 ## 已验证适配部分
@@ -37,7 +38,9 @@ ${PROJECT}
     ├── Resources
     │   ├── Color.xcassets
     │   ├── Image.xcassets
-    │   └── Localizable.strings
+    │   ├── Localizable.strings  # 默认主 Strings 文件
+    │   ├── OtherA.strings       # 可选追加附属 Strings 文件
+    │   └── OtherB.strings
     ├── App.swift
     ├── ContentView.swift
     ├── Info.plist
@@ -70,7 +73,13 @@ Text(L10n.text_name.key) // 文本类资源
         Asset.Color.color_name.color // 颜色资源
     )
 
+// Localizable.strings 会被编译为 L10n
+L10n.text_name.key  // 返回 LocalizedStringKey 类型
 L10n.text_name.text // 返回 String 类型
+// 其他的 .strings 会被编译到 L10nExtra（可在 swiftgen.yml 中配置）
+L10nExtra.text_name.key
+L10nExtra.text_name.text
+
 Asset.Color.color_name.nsColor // 返回 NSColor 类型
 Asset.Color.color_name.uiColor // 返回 UIColor 类型
 ```
