@@ -18,28 +18,31 @@ import SwiftUI
 public enum L10n {
   public enum Avocado {
     /// Avocado Toast
-    public static let toast = LocalizedString(lookupKey: "Avocado.Toast")
+    public static let toast = LocalizedString(table: "Localizable", lookupKey: "Avocado.Toast")
   }
 }
 
 // MARK: - Implementation Details
-
-extension L10n {
-  fileprivate static func tr(_ table: String, _ key: String, _ args: CVarArg...) -> String {
-    let format = BundleToken.bundle.localizedString(forKey: key, value: nil, table: table)
-    return String(format: format, locale: Locale.current, arguments: args)
-  }
+fileprivate func tr(_ table: String, _ key: String, _ args: CVarArg...) -> String {
+  let format = BundleToken.bundle.localizedString(forKey: key, value: nil, table: table)
+  return String(format: format, locale: Locale.current, arguments: args)
 }
 
 public struct LocalizedString {
-  internal let lookupKey: String
+  fileprivate let table: String
+  fileprivate let lookupKey: String
+
+  init(table: String, lookupKey:String) {
+    self.table = table
+    self.lookupKey = lookupKey
+  }
 
   var key: LocalizedStringKey {
     LocalizedStringKey(lookupKey)
   }
 
   var text: String {
-    L10n.tr("Localizable", lookupKey)
+    tr(table, lookupKey)
   }
 }
 
