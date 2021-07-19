@@ -22,6 +22,8 @@ brew install swiftgen
 
 ## 配置
 ### 配置文件 
+下载位置：[config files](https://github.com/wavky/SwiftGenConfigForSwiftUI/tree/master/config%20files)
+
 将三个配置文件放置在项目根目录下：
 * swiftgen.yml：SwiftGen 配置文件
 * swiftui-assets-template.stencil：与 SwiftUI 适配的 xcassets 模板 
@@ -67,21 +69,67 @@ swiftgen
 
 ## 在 SwiftUI 中使用
 ```swift
-Image(Asset.Image.image_name.name) // 图片类资源
-Text(L10n.text_name.key) // 文本类资源
+Image(Asset.Image.imageName.name) // 图片类资源
+Text(L10n.textName.key) // 文本类资源
     .foregroundColor(
-        Asset.Color.color_name.color // 颜色资源
+        Asset.Color.colorName.color // 颜色资源
     )
 
-// Localizable.strings 会被编译为 L10n
-L10n.text_name.key  // 返回 LocalizedStringKey 类型
-L10n.text_name.text // 返回 String 类型
-// 其他的 .strings 会被编译到 L10nExtra（可在 swiftgen.yml 中配置）
-L10nExtra.text_name.key
-L10nExtra.text_name.text
+// 默认 Localizable.strings 会被编译为 L10n
+L10n.textName      // 返回 Hashable 的 LocalizedString 类型
+L10n.textName.key  // 返回 LocalizedStringKey 类型
+L10n.textName.text // 返回 String 类型
+L10n.textName.text(withLocale: locale)
 
-Asset.Color.color_name.nsColor // 返回 NSColor 类型
-Asset.Color.color_name.uiColor // 返回 UIColor 类型
+// 其他的 .strings 文件会被编译到 L10nExtra
+// 该类型名可在 swiftgen.yml 中配置
+L10nExtra.fileName.textName
+L10nExtra.fileName.textName.key
+L10nExtra.fileName.textName.text
+L10nExtra.fileName.textName.text(withLocale: locale)
+
+Asset.Color.colorName.nsColor // 返回 NSColor 类型
+Asset.Color.colorName.uiColor // 返回 UIColor 类型
+```
+
+## 区别说明
+String 类型资源通过两个枚举类型返回索引：
+
+* **L10n**：Localizable.strings 中的所有资源对应到该枚举类型
+* **L10nExtra**：除此以外的所有 .strings 文件的所有资源对应到该枚举类型
+
+(※ InfoPlist.strings 默认被排除在外)
+
+### LocalizedString
+上述两个枚举类型都通过一个遵循 Hashable 协议的包裹类型 LocalizedString，作为指向某个 String 资源的对象提供索引支持
+
+LocalizedString 中包含两个字段和一个方法函数，通过两种返回类型对应不同使用场合（以 L10n 为例）：
+
+```swift
+// 返回 LocalizedString 本身，遵循 Hashable 协议，
+// 可用于 ForEach 等要求 Hashable 的场合
+L10n.textName
+
+// 返回 LocalizedStringKey 类型
+// 适用于 SwiftUI 的 Text 等部件
+// 能从环境变量中感知 .locale 变化，自动・动态适配多语言
+L10n.textName.key
+
+// 返回 String 类型
+// 默认返回 Locale.current 对应语言版本的资源
+// 无法感知环境变量中的 .locale
+L10n.textName.text
+
+// 返回 String 类型
+// 返回指定 Locale 对应语言版本的资源（识别其中的 identifier 字段）
+// 无法感知环境变量中的 .locale
+L10n.textName.text(withLocale: locale)
+
+// 对于定义在 Localizable.strings 以外的 String 资源
+// 在 SwiftUI 中使用其中的 LocalizedStringKey 对象时
+// 需要同时传入 table 值（以定位资源所在文件名）
+Text(L10nExtra.fileName.textName.key,
+     tableName: L10nExtra.fileName.textName.table)
 ```
 
 - - - -
